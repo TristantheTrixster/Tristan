@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tristan.com – Trip Planner</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4faff;
+    }
+    header {
+      background-color: #3498db;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    main {
+      padding: 30px;
+      max-width: 800px;
+      margin: auto;
+    }
+    section {
+      margin-top: 40px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    select, input, textarea, button {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    ul { padding-left: 20px; }
+    .hidden { display: none; }
+    .section-title {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🎢 Tristan.com</h1>
+    <p>Disney & Universal Trip Planner</p>
+  </header>
+
+  <main>
+    <!-- Park Info Section -->
+    <section>
+      <div class="section-title">🎠 What's Available</div>
+      <label for="parkSelect">Choose a Park:</label>
+      <select id="parkSelect" onchange="showParkDetails()">
+        <option value="">-- Select --</option>
+        <option value="mk">Magic Kingdom</option>
+        <option value="epcot">EPCOT</option>
+        <option value="hs">Hollywood Studios</option>
+        <option value="ak">Animal Kingdom</option>
+        <option value="usf">Universal Studios</option>
+        <option value="ioa">Islands of Adventure</option>
+      </select>
+
+      <div id="parkInfo">
+        <div id="mk" class="hidden">
+          <ul>
+            <li>Space Mountain</li>
+            <li>Haunted Mansion</li>
+            <li>Festival of Fantasy Parade</li>
+          </ul>
+        </div>
+        <div id="epcot" class="hidden">
+          <ul>
+            <li>Soarin’ Around the World</li>
+            <li>Frozen Ever After</li>
+            <li>World Showcase Dining</li>
+          </ul>
+        </div>
+        <div id="hs" class="hidden">
+          <ul>
+            <li>Rise of the Resistance</li>
+            <li>Tower of Terror</li>
+            <li>Fantasmic! Night Show</li>
+          </ul>
+        </div>
+        <div id="ak" class="hidden">
+          <ul>
+            <li>Expedition Everest</li>
+            <li>Avatar Flight of Passage</li>
+            <li>Festival of the Lion King</li>
+          </ul>
+        </div>
+        <div id="usf" class="hidden">
+          <ul>
+            <li>Revenge of the Mummy</li>
+            <li>Hollywood Rip Ride Rockit</li>
+            <li>Diagon Alley</li>
+          </ul>
+        </div>
+        <div id="ioa" class="hidden">
+          <ul>
+            <li>VelociCoaster</li>
+            <li>Hagrid's Motorbike Adventure</li>
+            <li>Jurassic Park River Adventure</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Schedule Builder Section -->
+    <section>
+      <div class="section-title">🗓️ Build My Schedule</div>
+      <label for="scheduleDate">Date:</label>
+      <input type="date" id="scheduleDate">
+
+      <label for="plans">Your Plans:</label>
+      <textarea id="plans" rows="6" placeholder="Add rides, food stops, shows..."></textarea>
+
+      <button onclick="saveSchedule()">Save Plan</button>
+
+      <div class="section-title">📌 Saved Schedule</div>
+      <div id="savedOutput"></div>
+    </section>
+  </main>
+
+  <script>
+    function showParkDetails() {
+      const parks = ["mk", "epcot", "hs", "ak", "usf", "ioa"];
+      parks.forEach(p => {
+        document.getElementById(p).classList.add("hidden");
+      });
+      const selected = document.getElementById("parkSelect").value;
+      if (selected) {
+        document.getElementById(selected).classList.remove("hidden");
+      }
+    }
+
+    function saveSchedule() {
+      const date = document.getElementById("scheduleDate").value;
+      const plans = document.getElementById("plans").value;
+      if (!date || !plans) return alert("Please select a date and enter plans.");
+      localStorage.setItem("schedule_" + date, plans);
+      alert("Plan saved!");
+      showSavedSchedules();
+    }
+
+    function showSavedSchedules() {
+      const out = document.getElementById("savedOutput");
+      out.innerHTML = "";
+      for (let key in localStorage) {
+        if (key.startsWith("schedule_")) {
+          const date = key.replace("schedule_", "");
+          const plans = localStorage.getItem(key);
+          out.innerHTML += `<strong>${date}</strong><br>${plans}<hr>`;
+        }
+      }
+    }
+
+    window.onload = showSavedSchedules;
+  </script>
+
+</body>
+</html>
